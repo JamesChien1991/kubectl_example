@@ -10,5 +10,8 @@ spec:
       containers:
       - name: build-firmware
         image: gcr.io/ultron-cms/helloworld
+        env:
+        - name: HELLO_MSG
+          value: "Hi James!!!"
       restartPolicy: Never
   backoffLimit: 5
