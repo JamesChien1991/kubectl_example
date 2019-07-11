@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-firmware
+spec:
+  template:
+    metadata:
+      name: build-firmware
+    spec:
+      containers:
+      - name: build-firmware
+        image: gcr.io/ultron-cms/helloworld
+      restartPolicy: Never
+  backoffLimit: 5
