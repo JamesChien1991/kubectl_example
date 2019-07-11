@@ -15,38 +15,20 @@ limitations under the License.
 package main
 
 import (
-	"flag"
 	"fmt"
-	"os"
-	"time"
 
-	"k8s.io/apimachinery/pkg/api/errors"
+	batchv1 "k8s.io/api/batch/v1"
+	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 
-	//
 	// Uncomment to load all auth plugins
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
-	//
-	// Or uncomment to load specific auth plugins
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/azure"
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
 )
 
 func main() {
-	// var kubeconfig *string
-	// if home := homeDir(); home != "" {
-	// 	kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	// } else {
-	// 	kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	// }
 	kubeconfig := "./kube_config"
-	fmt.Println(kubeconfig)
-	flag.Parse()
-	flag.PrintDefaults()
 	// use the current context in kubeconfig
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
@@ -58,37 +40,58 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	for {
-		pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{})
-		if err != nil {
-			panic(err.Error())
-		}
-		fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
 
-		// Examples for error handling:
-		// - Use helper functions like e.g. errors.IsNotFound()
-		// - And/or cast to StatusError and use its properties like e.g. ErrStatus.Message
-		namespace := "default"
-		pod := "example-xxxxx"
-		_, err = clientset.CoreV1().Pods(namespace).Get(pod, metav1.GetOptions{})
-		if errors.IsNotFound(err) {
-			fmt.Printf("Pod %s in namespace %s not found\n", pod, namespace)
-		} else if statusError, isStatus := err.(*errors.StatusError); isStatus {
-			fmt.Printf("Error getting pod %s in namespace %s: %v\n",
-				pod, namespace, statusError.ErrStatus.Message)
-		} else if err != nil {
-			panic(err.Error())
-		} else {
-			fmt.Printf("Found pod %s in namespace %s\n", pod, namespace)
-		}
-
-		time.Sleep(10 * time.Second)
+	// do something
+	pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
 	}
-}
+	fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
 
-func homeDir() string {
-	if h := os.Getenv("HOME"); h != "" {
-		return h
+	// deploy a job
+	jobsClient := clientset.BatchV1().Jobs("default")
+	// result1, err1 := jobsClient.List(metav1.ListOptions{})
+	// if err != nil {
+	// 	fmt.Println(err1)
+	// 	panic(err1)
+	// }
+	// fmt.Println(result1.Items[0].Spec)
+	// fmt.Println(fmt.Sprintf("%T", result1.Items[0].Spec))
+	backofflimit := new(int32)
+	*backofflimit = 5
+	job := &batchv1.Job{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "build-firmware",
+			Namespace: "default",
+		},
+		Spec: batchv1.JobSpec{
+			BackoffLimit: backofflimit,
+			Template: apiv1.PodTemplateSpec{
+				Spec: apiv1.PodSpec{
+					Containers: []apiv1.Container{
+						{
+							Name:  "build-firmware",
+							Image: "gcr.io/ultron-cms/helloworld",
+							Env: []apiv1.EnvVar{
+								{
+									Name:  "HELLO_MSG",
+									Value: "James !!!!!!",
+								},
+							},
+						},
+					},
+					RestartPolicy: "Never",
+				},
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "build-firmware",
+				},
+			},
+		},
 	}
-	return os.Getenv("USERPROFILE") // windows
+	result1, err1 := jobsClient.Create(job)
+	if err != nil {
+		fmt.Println(err1)
+		panic(err1)
+	}
+	fmt.Printf("Created job %q.\n", result1)
 }
