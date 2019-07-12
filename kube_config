@@ -1,8 +1,8 @@
 apiVersion: v1
 clusters:
 - cluster:
-    certificate-authority-data: {}
-    server: {}
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURDekNDQWZPZ0F3SUJBZ0lRZisyUTdkcFhtVFI4Q01XZ0l3eGdJVEFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlRelkySmhNREF3TXkxbE1tVTNMVFJtWmpRdFlUazJaaTFrTVdWaU5qWXhZVE16TVRjdwpIaGNOTVRrd056RXhNREEwTnpNeldoY05NalF3TnpBNU1ERTBOek16V2pBdk1TMHdLd1lEVlFRREV5UXpZMkpoCk1EQXdNeTFsTW1VM0xUUm1aalF0WVRrMlppMWtNV1ZpTmpZeFlUTXpNVGN3Z2dFaU1BMEdDU3FHU0liM0RRRUIKQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUNoQXp5Y29aVnUraWljWmIxNW1vM1l0OVBNM1VaMzQxeHN2NEU5VW1VeApQU2pCdGZ2dXlxNmU4cjlDa0RsNG4zTGRGeVVQQVZpU0ErSm9vb0grSWoybFdjZGZMeFE3N3NkTTRZMlhRUjQzCjNFNENNQVNOUGpDYU91bzRjS1lKaEVWUlRESVptOEhsY08vdjNSb0NTY00wdUJiWm5xQ1FuRHVIdmNEZk16dFEKRFYvK3Y2bWJaU0pKSFJiOGt2ZUdqVFNnTktZOWROZnJDVjZnRlJwUFVCc3dFTmI1MWJLdnB5UG85UDArcmRMWQpnTGNQZmRuMUVqZ0lXWWx6dmtra3dhbWlyMkJiMGlveGJzZjF4N2dLSnZkM3dhSHpteE52T1ErS2EyMExBQ3IyCmE3bWU5VHA1YlI0MUpjZ1Q4ZERIQWZudkdpd3haMU9GT1NMUGhFenRQMnRGQWdNQkFBR2pJekFoTUE0R0ExVWQKRHdFQi93UUVBd0lDQkRBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFBZwpZOHJWbFlTTzByS0FjTlhFaXhRSzhvbVUyTkVaeVBiMkRvVTRocFE5ZVd5ZnZzVW5NeUdlUTR4R2NlVmtFaVZNClhVYVhqZnQzVXNwUDNBcVhCejZWekFJSmREWElpWWxDRXNCZ0dURHpvRjd5azdqTXAvdlA1Z0F5dVJxalpadEkKVUs0S0JOVUVqbG5IZDI0VUhwZmU4NzQ0MExMUnFxaXdPSkJkdi9KREszZUpBSVRMaVd5YnZndklsdXREZlBlZgpVTzhHeEU1Zzl0MXVRQ1VVVHBHRUpXOTJBQUVHdEVzOURHTjlLM1NLelE2Z1A3aTJTVzd1YUF3RVlDdUxNT3hlCitPS1ptdkE5VTFDU0o3a1RUVEk5TW5lQ1dIM21ReEo0d1lQZTdnaGxkTlVxMitaQkNHcElEdWZkaGlqdHZDNGEKUWhDMzdJV1h2MjFmaDdEaG9yb3YKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    server: https://35.202.153.134
   name: gke_ultron-cms_us-central1-a_build-firmware
 contexts:
 - context:
@@ -17,9 +17,10 @@ users:
   user:
     auth-provider:
       config:
+        access-token: ya29.GlxCB3HqKtFyvokgmrkEVWzf7Sf0YbTnptzbjO_deCczAF1OZbfbZW1YHey7vjKCKq0o23jyDAwnnFIVRVUjCa5CqEswC25jeTGb0kWKvOye0i2tWdEM41endK_ENw
         cmd-args: config config-helper --format=json
         cmd-path: /Users/james/Documents/google-cloud-sdk/bin/gcloud
-        expiry: "2019-07-11T08:44:32Z"
+        expiry: "2019-07-11T10:34:23Z"
         expiry-key: '{.credential.token_expiry}'
         token-key: '{.credential.access_token}'
       name: gcp

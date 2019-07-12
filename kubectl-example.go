@@ -12,10 +12,13 @@ limitations under the License.
 */
 
 // Note: the example only works with the code within the same release/branch.
-package main
+package p
 
 import (
+	"encoding/json"
 	"fmt"
+	"html"
+	"net/http"
 
 	batchv1 "k8s.io/api/batch/v1"
 	apiv1 "k8s.io/api/core/v1"
@@ -27,7 +30,7 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
 
-func main() {
+func kubectlExample(w http.ResponseWriter, r *http.Request) {
 	kubeconfig := "./kube_config"
 	// use the current context in kubeconfig
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
@@ -94,4 +97,17 @@ func main() {
 		panic(err1)
 	}
 	fmt.Printf("Created job %q.\n", result1)
+
+	var d struct {
+		Message string `json:"message"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&d); err != nil {
+		fmt.Fprint(w, "Hello World!")
+		return
+	}
+	if d.Message == "" {
+		fmt.Fprint(w, "Hello World!")
+		return
+	}
+	fmt.Fprint(w, html.EscapeString(d.Message))
 }
