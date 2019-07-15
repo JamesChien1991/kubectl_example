@@ -1,17 +1,22 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: build-firmware
 spec:
+  selector:
+    matchLabels:
+      app: build-firmware
+  replicas: 1
   template:
     metadata:
       name: build-firmware
+      labels:
+        app: build-firmware
     spec:
       containers:
       - name: build-firmware
-        image: gcr.io/ultron-cms/helloworld
-        env:
-        - name: HELLO_MSG
-          value: "Hi James!!!"
-      restartPolicy: Never
-  backoffLimit: 5
+        image: gcr.io/ultron-cms/build-firmware
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+
